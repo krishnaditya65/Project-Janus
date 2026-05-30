@@ -20,6 +20,7 @@ type AuthenticationMiddleware struct {
 	userRoleRepo       authdomain.UserRoleRepository
 	rolePermissionRepo authdomain.RolePermissionRepository
 	jwtService         *tokenapp.JWTService
+	cache              *PrincipalCache
 }
 
 func NewAuthenticationMiddleware(
@@ -28,6 +29,7 @@ func NewAuthenticationMiddleware(
 	userRoleRepo authdomain.UserRoleRepository,
 	rolePermissionRepo authdomain.RolePermissionRepository,
 	jwtService *tokenapp.JWTService,
+	cache *PrincipalCache,
 ) *AuthenticationMiddleware {
 	return &AuthenticationMiddleware{
 		sessionRepo:        sessionRepo,
@@ -35,6 +37,7 @@ func NewAuthenticationMiddleware(
 		userRoleRepo:       userRoleRepo,
 		rolePermissionRepo: rolePermissionRepo,
 		jwtService:         jwtService,
+		cache:              cache,
 	}
 }
 
@@ -89,6 +92,10 @@ func (m *AuthenticationMiddleware) fromSessionHeader(r *http.Request) *principal
 		return nil
 	}
 
+	if p, ok := m.cache.Get(r.Context(), sessionID); ok {
+		return p
+	}
+
 	session, err := m.sessionRepo.GetByID(r.Context(), sessionID)
 	if err != nil {
 		slog.Warn("session lookup failed", "session_id", sessionID, "path", r.URL.Path)
@@ -123,7 +130,7 @@ func (m *AuthenticationMiddleware) fromSessionHeader(r *http.Request) *principal
 		return nil
 	}
 
-	return &principal.Principal{
+	p := &principal.Principal{
 		SessionID:   session.ID,
 		IdentityID:  session.IdentityID,
 		TenantID:    session.TenantID,
@@ -132,4 +139,6 @@ func (m *AuthenticationMiddleware) fromSessionHeader(r *http.Request) *principal
 		Roles:       roles,
 		Permissions: permissions,
 	}
+	m.cache.Put(r.Context(), p)
+	return p
 }

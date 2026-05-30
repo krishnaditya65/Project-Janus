@@ -35,6 +35,7 @@ type RefreshUseCase struct {
 	userRoleRepo       authorizationdomain.UserRoleRepository
 	rolePermissionRepo authorizationdomain.RolePermissionRepository
 	jwtService         *tokenapp.JWTService
+	invalidator        PrincipalInvalidator
 }
 
 func NewRefreshUseCase(
@@ -43,6 +44,7 @@ func NewRefreshUseCase(
 	userRoleRepo authorizationdomain.UserRoleRepository,
 	rolePermissionRepo authorizationdomain.RolePermissionRepository,
 	jwtService *tokenapp.JWTService,
+	invalidator PrincipalInvalidator,
 ) *RefreshUseCase {
 	return &RefreshUseCase{
 		sessionRepo:        sessionRepo,
@@ -50,6 +52,7 @@ func NewRefreshUseCase(
 		userRoleRepo:       userRoleRepo,
 		rolePermissionRepo: rolePermissionRepo,
 		jwtService:         jwtService,
+		invalidator:        invalidator,
 	}
 }
 
@@ -71,6 +74,9 @@ func (u *RefreshUseCase) Execute(ctx context.Context, input RefreshInput) (*Refr
 
 	if err := u.sessionRepo.Revoke(ctx, session.ID); err != nil {
 		return nil, err
+	}
+	if u.invalidator != nil {
+		u.invalidator.Delete(ctx, session.ID)
 	}
 
 	newRefreshToken, err := sharedtoken.GenerateRandom(32)

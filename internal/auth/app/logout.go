@@ -11,12 +11,20 @@ type LogoutInput struct {
 	SessionID string
 }
 
-type LogoutUseCase struct {
-	sessionRepo sessiondomain.Repository
+// PrincipalInvalidator removes the cached principal so a revoked session can
+// no longer authenticate via the cache. Kept as a tiny interface so this
+// package does not depend on the middleware package.
+type PrincipalInvalidator interface {
+	Delete(ctx context.Context, sessionID string)
 }
 
-func NewLogoutUseCase(sessionRepo sessiondomain.Repository) *LogoutUseCase {
-	return &LogoutUseCase{sessionRepo: sessionRepo}
+type LogoutUseCase struct {
+	sessionRepo sessiondomain.Repository
+	invalidator PrincipalInvalidator
+}
+
+func NewLogoutUseCase(sessionRepo sessiondomain.Repository, invalidator PrincipalInvalidator) *LogoutUseCase {
+	return &LogoutUseCase{sessionRepo: sessionRepo, invalidator: invalidator}
 }
 
 func (u *LogoutUseCase) Execute(ctx context.Context, input LogoutInput) error {
@@ -26,8 +34,17 @@ func (u *LogoutUseCase) Execute(ctx context.Context, input LogoutInput) error {
 	}
 
 	if session.RevokedAt != nil {
+		if u.invalidator != nil {
+			u.invalidator.Delete(ctx, input.SessionID)
+		}
 		return nil
 	}
 
-	return u.sessionRepo.Revoke(ctx, session.ID)
+	if err := u.sessionRepo.Revoke(ctx, session.ID); err != nil {
+		return err
+	}
+	if u.invalidator != nil {
+		u.invalidator.Delete(ctx, input.SessionID)
+	}
+	return nil
 }

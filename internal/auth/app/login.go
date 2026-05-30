@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	authdomain "github.com/krishnaditya65/auth-server/internal/auth/domain"
@@ -15,8 +16,13 @@ import (
 	"github.com/krishnaditya65/auth-server/internal/shared/password"
 	"github.com/krishnaditya65/auth-server/internal/shared/principal"
 	sharedtoken "github.com/krishnaditya65/auth-server/internal/shared/token"
+	tenantapp "github.com/krishnaditya65/auth-server/internal/tenant/app"
 	tokenapp "github.com/krishnaditya65/auth-server/internal/token/app"
 )
+
+// ErrMFAEnrollmentRequired is returned when the tenant policy mandates MFA
+// but the identity has no verified factors.
+var ErrMFAEnrollmentRequired = errors.New("mfa enrollment required")
 
 const accessTokenTTL = 15 * time.Minute
 const refreshTokenTTL = 7 * 24 * time.Hour
@@ -51,6 +57,7 @@ type LoginUseCase struct {
 	jwtService         *tokenapp.JWTService
 	mfaRepo            mfadomain.Repository
 	mfaChallengeStore  *mfaapp.ChallengeStore
+	policyEnforcer     *tenantapp.PolicyEnforcer
 }
 
 func NewLoginUseCase(
@@ -63,6 +70,7 @@ func NewLoginUseCase(
 	jwtService *tokenapp.JWTService,
 	mfaRepo mfadomain.Repository,
 	mfaChallengeStore *mfaapp.ChallengeStore,
+	policyEnforcer *tenantapp.PolicyEnforcer,
 ) *LoginUseCase {
 	return &LoginUseCase{
 		identityRepo:       identityRepo,
@@ -74,6 +82,7 @@ func NewLoginUseCase(
 		jwtService:         jwtService,
 		mfaRepo:            mfaRepo,
 		mfaChallengeStore:  mfaChallengeStore,
+		policyEnforcer:     policyEnforcer,
 	}
 }
 
@@ -97,9 +106,17 @@ func (u *LoginUseCase) Execute(ctx context.Context, input LoginInput) (*LoginOut
 		return nil, err
 	}
 
+	policy, err := u.policyEnforcer.Get(ctx, user.TenantID)
+	if err != nil {
+		return nil, err
+	}
+
 	factors, err := u.mfaRepo.GetVerifiedByIdentity(ctx, identity.ID)
 	if err != nil {
 		return nil, err
+	}
+	if policy.RequireMFA && len(factors) == 0 {
+		return nil, ErrMFAEnrollmentRequired
 	}
 	if len(factors) > 0 {
 		mfaToken, err := sharedtoken.GenerateRandom(32)

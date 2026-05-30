@@ -49,6 +49,12 @@ import (
 	waapp "github.com/krishnaditya65/auth-server/internal/webauthn/app"
 	wapostgres "github.com/krishnaditya65/auth-server/internal/webauthn/infra/postgres"
 	wahttp "github.com/krishnaditya65/auth-server/internal/webauthn/transport/http"
+
+	auditapp "github.com/krishnaditya65/auth-server/internal/audit/app"
+	"github.com/krishnaditya65/auth-server/internal/platform/metrics"
+	tenanthttp "github.com/krishnaditya65/auth-server/internal/tenant/transport/http"
+
+	"github.com/go-chi/chi/v5"
 )
 
 func main() {
@@ -99,10 +105,15 @@ func main() {
 	oauthCodeStore := oauthredis.NewCodeStore(cache)
 	mfaRepo := mfapostgres.NewRepository(db)
 	mfaChallengeStore := mfaapp.NewChallengeStore(cache)
+	tenantPolicyRepo := tenantpostgres.NewPolicyRepository(db)
 
 	// services
 	jwtService := tokenapp.NewJWTService(signingKeyRepo, cfg.JWTIssuer)
 	totpService := mfaapp.NewTOTPService(mfaRepo, cfg.JWTIssuer)
+	policyEnforcer := tenantapp.NewPolicyEnforcer(tenantPolicyRepo)
+	principalCache := authmiddleware.NewPrincipalCache(cache)
+	auditPublisher := auditapp.NewPublisher(msgBus)
+	_ = auditPublisher // emit calls added in handlers/use cases in follow-up; keep for now
 	slugService := tenantapp.NewSlugService(tenantRepo)
 	bootstrapService := authorizationapp.NewBootstrapService(roleRepo)
 	permissionBootstrapService := authorizationapp.NewPermissionBootstrapService(
@@ -133,6 +144,7 @@ func main() {
 		jwtService,
 		mfaRepo,
 		mfaChallengeStore,
+		policyEnforcer,
 	)
 
 	mfaCompleteUseCase := mfaapp.NewCompleteUseCase(
@@ -151,9 +163,10 @@ func main() {
 		userRoleRepo,
 		rolePermissionRepo,
 		jwtService,
+		principalCache,
 	)
 
-	logoutUseCase := authapp.NewLogoutUseCase(sessionRepo)
+	logoutUseCase := authapp.NewLogoutUseCase(sessionRepo, principalCache)
 
 	identityGetUserUseCase := identityapp.NewGetUserUseCase(userRepo)
 	listUsersUseCase := identityapp.NewListUsersUseCase(userRepo)
@@ -206,7 +219,10 @@ func main() {
 		userRoleRepo,
 		rolePermissionRepo,
 		jwtService,
+		principalCache,
 	)
+
+	policyHandler := tenanthttp.NewPolicyHandler(policyEnforcer, tenantPolicyRepo)
 
 	jwksHandler := tokenhttp.NewHandler(signingKeyRepo)
 
@@ -248,6 +264,16 @@ func main() {
 	r := server.Router()
 
 	r.Use(httpserver.CORS)
+	r.Use(httpserver.RequestLogger)
+	r.Use(metrics.Middleware(func(req *http.Request) string {
+		// chi exposes the matched route pattern via RouteContext
+		if rc := chi.RouteContext(req.Context()); rc != nil {
+			if p := rc.RoutePattern(); p != "" {
+				return p
+			}
+		}
+		return req.URL.Path
+	}))
 
 	// public routes
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
@@ -258,6 +284,7 @@ func main() {
 	r.Post("/refresh", authHandler.Refresh)
 	r.Get("/.well-known/jwks.json", jwksHandler.JWKS)
 	r.Get("/.well-known/openid-configuration", oidcHandler.Discovery)
+	r.Mount("/metrics", metrics.Handler())
 	r.Post("/oauth/token", oauthHandler.Token)
 	r.Post("/mfa/complete", mfaHandler.Complete)
 	r.Post("/webauthn/login/begin", waHandler.LoginBegin)
@@ -283,6 +310,9 @@ func main() {
 	r.With(withAuth).Post("/webauthn/register/begin", waHandler.RegisterBegin)
 	r.With(withAuth).Post("/webauthn/register/complete", waHandler.RegisterComplete)
 	r.With(withAuth).Get("/webauthn/credentials", waHandler.List)
+
+	r.With(withAuth).Get("/tenant/policy", policyHandler.Get)
+	r.With(withAuth, withPerm("tenant:update")).Put("/tenant/policy", policyHandler.Put)
 
 	r.With(withAuth, withPerm("users:read")).Get("/users", identityHandler.ListUsers)
 	r.With(withAuth, withPerm("users:read")).Get("/users/{userID}", identityHandler.GetUser)

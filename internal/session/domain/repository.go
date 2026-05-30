@@ -1,6 +1,9 @@
 package domain
 
-import "context"
+import (
+	"context"
+	"time"
+)
 
 type Repository interface {
 	Create(
@@ -21,4 +24,9 @@ type Repository interface {
 		ctx context.Context,
 		id string,
 	) error
+
+	DeleteExpiredOrRevoked(
+		ctx context.Context,
+		olderThan time.Time,
+	) (int64, error)
 }

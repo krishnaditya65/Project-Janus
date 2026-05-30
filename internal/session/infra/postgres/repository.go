@@ -2,11 +2,12 @@ package postgres
 
 import (
 	"context"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	sessiondomain "github.com/krishnaditya65/auth-server/internal/session/domain"
 	pgtx "github.com/krishnaditya65/auth-server/internal/platform/postgres/tx"
+	sessiondomain "github.com/krishnaditya65/auth-server/internal/session/domain"
 )
 
 type Repository struct {
@@ -166,6 +167,18 @@ func (r *Repository) Revoke(
 	_, err := r.executor(ctx).Exec(ctx, query, id)
 
 	return err
+}
+
+func (r *Repository) DeleteExpiredOrRevoked(ctx context.Context, olderThan time.Time) (int64, error) {
+	const q = `
+		DELETE FROM sessions
+		WHERE (expires_at < $1) OR (revoked_at IS NOT NULL AND revoked_at < $1)
+	`
+	tag, err := r.executor(ctx).Exec(ctx, q, olderThan)
+	if err != nil {
+		return 0, err
+	}
+	return tag.RowsAffected(), nil
 }
 
 func (r *Repository) executor(ctx context.Context) pgtx.Executor {

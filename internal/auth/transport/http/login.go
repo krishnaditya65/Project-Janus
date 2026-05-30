@@ -47,6 +47,10 @@ func (h *Handler) Login(
 			writeError(w, "invalid credentials", http.StatusUnauthorized)
 			return
 		}
+		if err == authapp.ErrMFAEnrollmentRequired {
+			writeError(w, "mfa enrollment required", http.StatusForbidden)
+			return
+		}
 		writeError(w, "internal error", http.StatusInternalServerError)
 		return
 	}
