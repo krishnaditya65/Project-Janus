@@ -19,14 +19,14 @@ type RefreshInput struct {
 }
 
 type RefreshOutput struct {
-	SessionID    string
-	TenantID     string
-	UserID       string
-	Roles        []string
-	Permissions  []string
-	AccessToken  string
-	ExpiresIn    int
-	RefreshToken string
+	SessionID    string   `json:"session_id"`
+	TenantID     string   `json:"tenant_id"`
+	UserID       string   `json:"user_id"`
+	Roles        []string `json:"roles"`
+	Permissions  []string `json:"permissions"`
+	AccessToken  string   `json:"access_token"`
+	ExpiresIn    int      `json:"expires_in"`
+	RefreshToken string   `json:"refresh_token"`
 }
 
 type RefreshUseCase struct {

@@ -66,6 +66,10 @@ func Verify(password string, encodedHash string) bool {
 		return false
 	}
 
+	if len(salt) == 0 || len(expectedHash) == 0 {
+		return false
+	}
+
 	hash := argon2.IDKey(
 		[]byte(password),
 		salt,
