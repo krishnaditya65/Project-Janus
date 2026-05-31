@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	identitydomain "github.com/krishnaditya65/auth-server/internal/identity/domain"
-	authctx "github.com/krishnaditya65/auth-server/internal/shared/context"
+	identitydomain "github.com/krishnaditya65/Project-Janus/internal/identity/domain"
+	authctx "github.com/krishnaditya65/Project-Janus/internal/shared/context"
 )
 
 type UserInfoHandler struct {

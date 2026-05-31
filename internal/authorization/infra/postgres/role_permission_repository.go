@@ -5,8 +5,8 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	authdomain "github.com/krishnaditya65/auth-server/internal/authorization/domain"
-	pgtx "github.com/krishnaditya65/auth-server/internal/platform/postgres/tx"
+	authdomain "github.com/krishnaditya65/Project-Janus/internal/authorization/domain"
+	pgtx "github.com/krishnaditya65/Project-Janus/internal/platform/postgres/tx"
 )
 
 type RolePermissionRepository struct {

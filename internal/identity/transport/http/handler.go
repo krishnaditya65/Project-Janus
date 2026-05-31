@@ -1,6 +1,6 @@
 package http
 
-import identityapp "github.com/krishnaditya65/auth-server/internal/identity/app"
+import identityapp "github.com/krishnaditya65/Project-Janus/internal/identity/app"
 
 type Handler struct {
 	getUserUseCase    *identityapp.GetUserUseCase

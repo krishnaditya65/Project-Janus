@@ -8,8 +8,8 @@ import (
 
 	"github.com/pquerna/otp/totp"
 
-	"github.com/krishnaditya65/auth-server/internal/mfa/domain"
-	"github.com/krishnaditya65/auth-server/internal/shared/id"
+	"github.com/krishnaditya65/Project-Janus/internal/mfa/domain"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/id"
 )
 
 var (

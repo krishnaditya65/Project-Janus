@@ -8,9 +8,9 @@ import (
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	identitydomain "github.com/krishnaditya65/auth-server/internal/identity/domain"
-	pgtx "github.com/krishnaditya65/auth-server/internal/platform/postgres/tx"
-	sharederrors "github.com/krishnaditya65/auth-server/internal/shared/errors"
+	identitydomain "github.com/krishnaditya65/Project-Janus/internal/identity/domain"
+	pgtx "github.com/krishnaditya65/Project-Janus/internal/platform/postgres/tx"
+	sharederrors "github.com/krishnaditya65/Project-Janus/internal/shared/errors"
 )
 
 type Repository struct {

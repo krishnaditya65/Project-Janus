@@ -2,8 +2,9 @@
 // throughput + latency + significance.
 //
 // Variants:
-//   A = stateless JWT auth on /me   (Authorization: Bearer <JWT>)
-//   B = session-id DB auth on /me   (X-Session-ID: <uuid>)
+//
+//	A = stateless JWT auth on /me   (Authorization: Bearer <JWT>)
+//	B = session-id DB auth on /me   (X-Session-ID: <uuid>)
 //
 // Both call the same endpoint with the same principal. The only difference
 // is the auth path: A skips the DB; B does 4 sequential DB reads.
@@ -14,7 +15,8 @@
 // statistically significant.
 //
 // Usage:
-//   go run ./test/abtest -concurrency 50 -duration 30s
+//
+//	go run ./test/abtest -concurrency 50 -duration 30s
 package main
 
 import (
@@ -171,8 +173,12 @@ func reportVariant(v *variant, elapsed time.Duration) {
 }
 
 func compare(A, B *variant) {
-	A.mu.Lock(); a := A.durations; A.mu.Unlock()
-	B.mu.Lock(); b := B.durations; B.mu.Unlock()
+	A.mu.Lock()
+	a := A.durations
+	A.mu.Unlock()
+	B.mu.Lock()
+	b := B.durations
+	B.mu.Unlock()
 	if len(a) == 0 || len(b) == 0 {
 		return
 	}

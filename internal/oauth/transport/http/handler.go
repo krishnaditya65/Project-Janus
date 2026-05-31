@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"net/url"
 
-	oauthapp "github.com/krishnaditya65/auth-server/internal/oauth/app"
-	authctx "github.com/krishnaditya65/auth-server/internal/shared/context"
+	oauthapp "github.com/krishnaditya65/Project-Janus/internal/oauth/app"
+	authctx "github.com/krishnaditya65/Project-Janus/internal/shared/context"
 )
 
 type Handler struct {

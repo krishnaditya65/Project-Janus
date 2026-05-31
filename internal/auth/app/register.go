@@ -4,20 +4,20 @@ import (
 	"context"
 	"time"
 
-	authdomain "github.com/krishnaditya65/auth-server/internal/auth/domain"
-	identitydomain "github.com/krishnaditya65/auth-server/internal/identity/domain"
+	authdomain "github.com/krishnaditya65/Project-Janus/internal/auth/domain"
+	identitydomain "github.com/krishnaditya65/Project-Janus/internal/identity/domain"
 
-	"github.com/krishnaditya65/auth-server/internal/shared/id"
-	"github.com/krishnaditya65/auth-server/internal/shared/password"
-	"github.com/krishnaditya65/auth-server/internal/shared/slug"
-	"github.com/krishnaditya65/auth-server/internal/shared/tx"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/id"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/password"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/slug"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/tx"
 
-	authorizationapp "github.com/krishnaditya65/auth-server/internal/authorization/app"
+	authorizationapp "github.com/krishnaditya65/Project-Janus/internal/authorization/app"
 
-	tenantapp "github.com/krishnaditya65/auth-server/internal/tenant/app"
-	tenantdomain "github.com/krishnaditya65/auth-server/internal/tenant/domain"
+	tenantapp "github.com/krishnaditya65/Project-Janus/internal/tenant/app"
+	tenantdomain "github.com/krishnaditya65/Project-Janus/internal/tenant/domain"
 
-	authorizationdomain "github.com/krishnaditya65/auth-server/internal/authorization/domain"
+	authorizationdomain "github.com/krishnaditya65/Project-Janus/internal/authorization/domain"
 )
 
 type RegisterInput struct {

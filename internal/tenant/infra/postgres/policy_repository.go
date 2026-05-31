@@ -8,8 +8,8 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	pgtx "github.com/krishnaditya65/auth-server/internal/platform/postgres/tx"
-	"github.com/krishnaditya65/auth-server/internal/tenant/domain"
+	pgtx "github.com/krishnaditya65/Project-Janus/internal/platform/postgres/tx"
+	"github.com/krishnaditya65/Project-Janus/internal/tenant/domain"
 )
 
 type PolicyRepository struct {

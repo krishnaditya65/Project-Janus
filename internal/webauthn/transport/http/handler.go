@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	waapp "github.com/krishnaditya65/auth-server/internal/webauthn/app"
+	waapp "github.com/krishnaditya65/Project-Janus/internal/webauthn/app"
 
-	authctx "github.com/krishnaditya65/auth-server/internal/shared/context"
+	authctx "github.com/krishnaditya65/Project-Janus/internal/shared/context"
 )
 
 type Handler struct {
@@ -113,11 +113,11 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	type out struct {
-		ID         string    `json:"id"`
-		Label      string    `json:"label"`
-		Transports []string  `json:"transports"`
-		CreatedAt  string    `json:"created_at"`
-		LastUsedAt *string   `json:"last_used_at"`
+		ID         string   `json:"id"`
+		Label      string   `json:"label"`
+		Transports []string `json:"transports"`
+		CreatedAt  string   `json:"created_at"`
+		LastUsedAt *string  `json:"last_used_at"`
 	}
 	resp := make([]out, 0, len(creds))
 	for _, c := range creds {

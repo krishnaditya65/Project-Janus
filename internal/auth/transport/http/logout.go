@@ -3,8 +3,8 @@ package http
 import (
 	"net/http"
 
-	authapp "github.com/krishnaditya65/auth-server/internal/auth/app"
-	authctx "github.com/krishnaditya65/auth-server/internal/shared/context"
+	authapp "github.com/krishnaditya65/Project-Janus/internal/auth/app"
+	authctx "github.com/krishnaditya65/Project-Janus/internal/shared/context"
 )
 
 func (h *Handler) Logout(

@@ -1,13 +1,13 @@
 // Security tests against the running server.
 //
 // Categories:
-//   1. JWT attacks      — alg=none, alg substitution, expired, future iat, tampered, kid traversal
-//   2. SQL injection    — common payloads in email/password/role-name fields
-//   3. Brute force      — repeated wrong-password attempts (no rate-limit yet; documents the gap)
-//   4. Header injection — CRLF in user-controlled fields
-//   5. Timing attack    — coarse check that valid-user/invalid-user login times are similar
-//   6. CORS/headers     — server doesn't echo dangerous origins
-//   7. PKCE downgrade   — `plain` and missing methods rejected
+//  1. JWT attacks      — alg=none, alg substitution, expired, future iat, tampered, kid traversal
+//  2. SQL injection    — common payloads in email/password/role-name fields
+//  3. Brute force      — repeated wrong-password attempts (no rate-limit yet; documents the gap)
+//  4. Header injection — CRLF in user-controlled fields
+//  5. Timing attack    — coarse check that valid-user/invalid-user login times are similar
+//  6. CORS/headers     — server doesn't echo dangerous origins
+//  7. PKCE downgrade   — `plain` and missing methods rejected
 //
 // Run:  go test ./test/security/... -count=1 -v
 package security

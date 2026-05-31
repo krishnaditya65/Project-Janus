@@ -7,8 +7,8 @@ import (
 
 	goredis "github.com/redis/go-redis/v9"
 
-	"github.com/krishnaditya65/auth-server/internal/platform/metrics"
-	"github.com/krishnaditya65/auth-server/internal/shared/principal"
+	"github.com/krishnaditya65/Project-Janus/internal/platform/metrics"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/principal"
 )
 
 // PrincipalCache stores the assembled Principal by session ID so the

@@ -3,9 +3,9 @@ package app
 import (
 	"context"
 
-	authorizationdomain "github.com/krishnaditya65/auth-server/internal/authorization/domain"
-	identitydomain "github.com/krishnaditya65/auth-server/internal/identity/domain"
-	sessiondomain "github.com/krishnaditya65/auth-server/internal/session/domain"
+	authorizationdomain "github.com/krishnaditya65/Project-Janus/internal/authorization/domain"
+	identitydomain "github.com/krishnaditya65/Project-Janus/internal/identity/domain"
+	sessiondomain "github.com/krishnaditya65/Project-Janus/internal/session/domain"
 )
 
 type MeOutput struct {

@@ -3,7 +3,7 @@ package app
 import (
 	"context"
 
-	authorizationdomain "github.com/krishnaditya65/auth-server/internal/authorization/domain"
+	authorizationdomain "github.com/krishnaditya65/Project-Janus/internal/authorization/domain"
 )
 
 type ListRolesUseCase struct {

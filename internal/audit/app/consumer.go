@@ -7,7 +7,7 @@ import (
 
 	natsgo "github.com/nats-io/nats.go"
 
-	"github.com/krishnaditya65/auth-server/internal/audit/domain"
+	"github.com/krishnaditya65/Project-Janus/internal/audit/domain"
 )
 
 type Consumer struct {

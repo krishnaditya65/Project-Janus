@@ -6,8 +6,8 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	identityapp "github.com/krishnaditya65/auth-server/internal/identity/app"
-	authctx "github.com/krishnaditya65/auth-server/internal/shared/context"
+	identityapp "github.com/krishnaditya65/Project-Janus/internal/identity/app"
+	authctx "github.com/krishnaditya65/Project-Janus/internal/shared/context"
 )
 
 func (h *Handler) GetUser(

@@ -4,14 +4,14 @@ import (
 	"context"
 	"time"
 
-	authorizationdomain "github.com/krishnaditya65/auth-server/internal/authorization/domain"
-	identitydomain "github.com/krishnaditya65/auth-server/internal/identity/domain"
-	sessiondomain "github.com/krishnaditya65/auth-server/internal/session/domain"
-	sharederrors "github.com/krishnaditya65/auth-server/internal/shared/errors"
-	"github.com/krishnaditya65/auth-server/internal/shared/id"
-	"github.com/krishnaditya65/auth-server/internal/shared/principal"
-	sharedtoken "github.com/krishnaditya65/auth-server/internal/shared/token"
-	tokenapp "github.com/krishnaditya65/auth-server/internal/token/app"
+	authorizationdomain "github.com/krishnaditya65/Project-Janus/internal/authorization/domain"
+	identitydomain "github.com/krishnaditya65/Project-Janus/internal/identity/domain"
+	sessiondomain "github.com/krishnaditya65/Project-Janus/internal/session/domain"
+	sharederrors "github.com/krishnaditya65/Project-Janus/internal/shared/errors"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/id"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/principal"
+	sharedtoken "github.com/krishnaditya65/Project-Janus/internal/shared/token"
+	tokenapp "github.com/krishnaditya65/Project-Janus/internal/token/app"
 )
 
 type RefreshInput struct {

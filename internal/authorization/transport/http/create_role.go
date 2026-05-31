@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	authorizationapp "github.com/krishnaditya65/auth-server/internal/authorization/app"
-	authctx "github.com/krishnaditya65/auth-server/internal/shared/context"
-	sharederrors "github.com/krishnaditya65/auth-server/internal/shared/errors"
+	authorizationapp "github.com/krishnaditya65/Project-Janus/internal/authorization/app"
+	authctx "github.com/krishnaditya65/Project-Janus/internal/shared/context"
+	sharederrors "github.com/krishnaditya65/Project-Janus/internal/shared/errors"
 )
 
 func (h *Handler) CreateRole(

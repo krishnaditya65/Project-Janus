@@ -13,9 +13,9 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 
-	sharederrors "github.com/krishnaditya65/auth-server/internal/shared/errors"
-	"github.com/krishnaditya65/auth-server/internal/shared/principal"
-	"github.com/krishnaditya65/auth-server/internal/token/domain"
+	sharederrors "github.com/krishnaditya65/Project-Janus/internal/shared/errors"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/principal"
+	"github.com/krishnaditya65/Project-Janus/internal/token/domain"
 )
 
 type JWTService struct {

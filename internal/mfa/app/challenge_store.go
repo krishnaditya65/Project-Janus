@@ -7,7 +7,7 @@ import (
 
 	goredis "github.com/redis/go-redis/v9"
 
-	sharederrors "github.com/krishnaditya65/auth-server/internal/shared/errors"
+	sharederrors "github.com/krishnaditya65/Project-Janus/internal/shared/errors"
 )
 
 const challengePrefix = "mfa:challenge:"

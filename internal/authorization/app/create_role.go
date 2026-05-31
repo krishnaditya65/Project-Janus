@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	authorizationdomain "github.com/krishnaditya65/auth-server/internal/authorization/domain"
-	sharederrors "github.com/krishnaditya65/auth-server/internal/shared/errors"
-	"github.com/krishnaditya65/auth-server/internal/shared/id"
+	authorizationdomain "github.com/krishnaditya65/Project-Janus/internal/authorization/domain"
+	sharederrors "github.com/krishnaditya65/Project-Janus/internal/shared/errors"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/id"
 )
 
 type CreateRoleInput struct {

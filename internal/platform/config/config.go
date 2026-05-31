@@ -27,16 +27,16 @@ func Load() Config {
 	}
 
 	return Config{
-		AppEnv:      getEnv("APP_ENV", "development"),
-		HTTPPort:    getEnv("HTTP_PORT", "8080"),
+		AppEnv:          getEnv("APP_ENV", "development"),
+		HTTPPort:        getEnv("HTTP_PORT", "8080"),
 		DatabaseURL:     getEnv("DATABASE_URL", ""),
 		DatabaseReadURL: getEnv("DATABASE_READ_URL", ""),
-		RedisAddr:   getEnv("REDIS_ADDR", "localhost:6380"),
-		NATSURL:     getEnv("NATS_URL", "nats://localhost:4223"),
-		JWTIssuer:      getEnv("JWT_ISSUER", "http://localhost:8080"),
-		WebAuthnRPID:   getEnv("WEBAUTHN_RPID", "localhost"),
-		WebAuthnName:   getEnv("WEBAUTHN_NAME", "Auth Server"),
-		WebAuthnOrigin: getEnv("WEBAUTHN_ORIGIN", "http://localhost:3000"),
+		RedisAddr:       getEnv("REDIS_ADDR", "localhost:6380"),
+		NATSURL:         getEnv("NATS_URL", "nats://localhost:4223"),
+		JWTIssuer:       getEnv("JWT_ISSUER", "http://localhost:8080"),
+		WebAuthnRPID:    getEnv("WEBAUTHN_RPID", "localhost"),
+		WebAuthnName:    getEnv("WEBAUTHN_NAME", "Auth Server"),
+		WebAuthnOrigin:  getEnv("WEBAUTHN_ORIGIN", "http://localhost:3000"),
 	}
 }
 

@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/krishnaditya65/auth-server/internal/shared/principal"
-	tokenapp "github.com/krishnaditya65/auth-server/internal/token/app"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/principal"
+	tokenapp "github.com/krishnaditya65/Project-Janus/internal/token/app"
 )
 
 type IDTokenService struct {

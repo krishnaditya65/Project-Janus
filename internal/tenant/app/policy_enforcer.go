@@ -6,14 +6,14 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/krishnaditya65/auth-server/internal/tenant/domain"
+	"github.com/krishnaditya65/Project-Janus/internal/tenant/domain"
 )
 
 var (
-	ErrPasswordTooShort     = errors.New("password too short")
-	ErrPasswordNeedsUpper   = errors.New("password requires uppercase letter")
-	ErrPasswordNeedsDigit   = errors.New("password requires digit")
-	ErrPasswordNeedsSymbol  = errors.New("password requires symbol")
+	ErrPasswordTooShort      = errors.New("password too short")
+	ErrPasswordNeedsUpper    = errors.New("password requires uppercase letter")
+	ErrPasswordNeedsDigit    = errors.New("password requires digit")
+	ErrPasswordNeedsSymbol   = errors.New("password requires symbol")
 	ErrEmailDomainNotAllowed = errors.New("email domain not allowed")
 )
 

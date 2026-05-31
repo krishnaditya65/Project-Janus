@@ -1,6 +1,6 @@
 package http
 
-import authorizationapp "github.com/krishnaditya65/auth-server/internal/authorization/app"
+import authorizationapp "github.com/krishnaditya65/Project-Janus/internal/authorization/app"
 
 type Handler struct {
 	createRoleUseCase *authorizationapp.CreateRoleUseCase

@@ -10,9 +10,9 @@ import (
 	"github.com/go-webauthn/webauthn/protocol"
 	wa "github.com/go-webauthn/webauthn/webauthn"
 
-	identitydomain "github.com/krishnaditya65/auth-server/internal/identity/domain"
-	"github.com/krishnaditya65/auth-server/internal/shared/id"
-	"github.com/krishnaditya65/auth-server/internal/webauthn/domain"
+	identitydomain "github.com/krishnaditya65/Project-Janus/internal/identity/domain"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/id"
+	"github.com/krishnaditya65/Project-Janus/internal/webauthn/domain"
 )
 
 var ErrUnknownCredential = errors.New("unknown credential")

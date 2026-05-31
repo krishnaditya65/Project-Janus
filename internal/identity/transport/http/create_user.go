@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	identityapp "github.com/krishnaditya65/auth-server/internal/identity/app"
-	authctx "github.com/krishnaditya65/auth-server/internal/shared/context"
-	sharederrors "github.com/krishnaditya65/auth-server/internal/shared/errors"
+	identityapp "github.com/krishnaditya65/Project-Janus/internal/identity/app"
+	authctx "github.com/krishnaditya65/Project-Janus/internal/shared/context"
+	sharederrors "github.com/krishnaditya65/Project-Janus/internal/shared/errors"
 )
 
 type CreateUserRequest struct {

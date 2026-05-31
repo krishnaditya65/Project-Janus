@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/krishnaditya65/auth-server/internal/shared/principal"
-	"github.com/krishnaditya65/auth-server/internal/token/domain"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/principal"
+	"github.com/krishnaditya65/Project-Janus/internal/token/domain"
 )
 
 type memKeyRepo struct {
@@ -27,7 +27,7 @@ func (r *memKeyRepo) Create(ctx context.Context, k *domain.SigningKey) error {
 	r.key = k
 	return nil
 }
-func (r *memKeyRepo) DeactivateAll(ctx context.Context) error                { return nil }
+func (r *memKeyRepo) DeactivateAll(ctx context.Context) error { return nil }
 func (r *memKeyRepo) ListPublic(ctx context.Context) ([]*domain.SigningKey, error) {
 	if r.key == nil {
 		return nil, nil

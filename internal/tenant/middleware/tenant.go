@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	authctx "github.com/krishnaditya65/auth-server/internal/shared/context"
-	"github.com/krishnaditya65/auth-server/internal/shared/tenancy"
+	authctx "github.com/krishnaditya65/Project-Janus/internal/shared/context"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/tenancy"
 
 	"net/http"
 )

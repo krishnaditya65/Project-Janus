@@ -8,8 +8,8 @@ import (
 
 	goredis "github.com/redis/go-redis/v9"
 
-	"github.com/krishnaditya65/auth-server/internal/oauth/domain"
-	sharederrors "github.com/krishnaditya65/auth-server/internal/shared/errors"
+	"github.com/krishnaditya65/Project-Janus/internal/oauth/domain"
+	sharederrors "github.com/krishnaditya65/Project-Janus/internal/shared/errors"
 )
 
 const codePrefix = "oauth:code:"

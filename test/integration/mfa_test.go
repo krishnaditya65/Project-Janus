@@ -100,7 +100,9 @@ func TestMFA_ListFactors(t *testing.T) {
 	}
 
 	_, body2 := c.Post("/mfa/enroll/totp", map[string]string{"label": "Phone"})
-	var enroll struct{ FactorID string `json:"factor_id"` }
+	var enroll struct {
+		FactorID string `json:"factor_id"`
+	}
 	_ = json.Unmarshal(body2, &enroll)
 
 	resp3, body3 := c.Get("/mfa/factors")

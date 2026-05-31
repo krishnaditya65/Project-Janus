@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	authapp "github.com/krishnaditya65/auth-server/internal/auth/app"
-	sharederrors "github.com/krishnaditya65/auth-server/internal/shared/errors"
+	authapp "github.com/krishnaditya65/Project-Janus/internal/auth/app"
+	sharederrors "github.com/krishnaditya65/Project-Janus/internal/shared/errors"
 )
 
 func (h *Handler) Refresh(w http.ResponseWriter, r *http.Request) {

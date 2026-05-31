@@ -3,8 +3,8 @@ package app
 import (
 	"context"
 
-	sessiondomain "github.com/krishnaditya65/auth-server/internal/session/domain"
-	sharederrors "github.com/krishnaditya65/auth-server/internal/shared/errors"
+	sessiondomain "github.com/krishnaditya65/Project-Janus/internal/session/domain"
+	sharederrors "github.com/krishnaditya65/Project-Janus/internal/shared/errors"
 )
 
 type LogoutInput struct {

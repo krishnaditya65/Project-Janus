@@ -4,13 +4,13 @@ import (
 	"context"
 	"time"
 
-	authdomain "github.com/krishnaditya65/auth-server/internal/auth/domain"
-	authorizationdomain "github.com/krishnaditya65/auth-server/internal/authorization/domain"
-	identitydomain "github.com/krishnaditya65/auth-server/internal/identity/domain"
+	authdomain "github.com/krishnaditya65/Project-Janus/internal/auth/domain"
+	authorizationdomain "github.com/krishnaditya65/Project-Janus/internal/authorization/domain"
+	identitydomain "github.com/krishnaditya65/Project-Janus/internal/identity/domain"
 
-	"github.com/krishnaditya65/auth-server/internal/shared/id"
-	"github.com/krishnaditya65/auth-server/internal/shared/password"
-	"github.com/krishnaditya65/auth-server/internal/shared/tx"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/id"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/password"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/tx"
 )
 
 type CreateUserInput struct {

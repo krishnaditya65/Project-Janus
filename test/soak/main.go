@@ -6,8 +6,9 @@
 // Output: a per-bucket line every reporting interval plus a final summary.
 //
 // Usage:
-//   go run ./test/soak -duration 10m -concurrency 20 -bucket 30s
-//   go run ./test/soak -duration 1h  -concurrency 50 -bucket 1m -sla-drift-pct 50
+//
+//	go run ./test/soak -duration 10m -concurrency 20 -bucket 30s
+//	go run ./test/soak -duration 1h  -concurrency 50 -bucket 1m -sla-drift-pct 50
 package main
 
 import (
@@ -39,10 +40,10 @@ type sample struct {
 }
 
 type bucket struct {
-	start     time.Time
-	samples   []time.Duration
-	ok, fail  int
-	allocMB   float64 // process heap at end of bucket
+	start    time.Time
+	samples  []time.Duration
+	ok, fail int
+	allocMB  float64 // process heap at end of bucket
 }
 
 func main() {

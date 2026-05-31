@@ -6,8 +6,8 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	pgtx "github.com/krishnaditya65/auth-server/internal/platform/postgres/tx"
-	sessiondomain "github.com/krishnaditya65/auth-server/internal/session/domain"
+	pgtx "github.com/krishnaditya65/Project-Janus/internal/platform/postgres/tx"
+	sessiondomain "github.com/krishnaditya65/Project-Janus/internal/session/domain"
 )
 
 type Repository struct {

@@ -5,8 +5,8 @@ import (
 	"errors"
 	"net/http"
 
-	mfaapp "github.com/krishnaditya65/auth-server/internal/mfa/app"
-	authctx "github.com/krishnaditya65/auth-server/internal/shared/context"
+	mfaapp "github.com/krishnaditya65/Project-Janus/internal/mfa/app"
+	authctx "github.com/krishnaditya65/Project-Janus/internal/shared/context"
 )
 
 type Handler struct {

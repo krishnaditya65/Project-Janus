@@ -3,7 +3,7 @@ package context
 import (
 	"context"
 
-	"github.com/krishnaditya65/auth-server/internal/shared/principal"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/principal"
 )
 
 type contextKey string

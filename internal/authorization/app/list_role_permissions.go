@@ -3,8 +3,8 @@ package app
 import (
 	"context"
 
-	authorizationdomain "github.com/krishnaditya65/auth-server/internal/authorization/domain"
-	sharederrors "github.com/krishnaditya65/auth-server/internal/shared/errors"
+	authorizationdomain "github.com/krishnaditya65/Project-Janus/internal/authorization/domain"
+	sharederrors "github.com/krishnaditya65/Project-Janus/internal/shared/errors"
 )
 
 type ListRolePermissionsUseCase struct {

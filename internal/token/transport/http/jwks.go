@@ -9,7 +9,7 @@ import (
 	"encoding/pem"
 	"net/http"
 
-	"github.com/krishnaditya65/auth-server/internal/token/domain"
+	"github.com/krishnaditya65/Project-Janus/internal/token/domain"
 )
 
 type Handler struct {

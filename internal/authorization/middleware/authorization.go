@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 
-	authctx "github.com/krishnaditya65/auth-server/internal/shared/context"
+	authctx "github.com/krishnaditya65/Project-Janus/internal/shared/context"
 )
 
 func RequirePermission(

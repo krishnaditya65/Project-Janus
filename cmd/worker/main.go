@@ -1,9 +1,9 @@
 // Worker binary: long-running background jobs.
 //
 // Responsibilities:
-//   1. Subscribe to NATS subject "audit.events" and persist to audit_events.
-//   2. Periodically delete sessions where expires_at < now()-retention or
-//      revoked_at < now()-retention.
+//  1. Subscribe to NATS subject "audit.events" and persist to audit_events.
+//  2. Periodically delete sessions where expires_at < now()-retention or
+//     revoked_at < now()-retention.
 //
 // Runs forever; SIGINT/SIGTERM for clean shutdown.
 package main
@@ -16,12 +16,12 @@ import (
 	"syscall"
 	"time"
 
-	auditapp "github.com/krishnaditya65/auth-server/internal/audit/app"
-	auditpostgres "github.com/krishnaditya65/auth-server/internal/audit/infra/postgres"
-	"github.com/krishnaditya65/auth-server/internal/platform/config"
-	"github.com/krishnaditya65/auth-server/internal/platform/nats"
-	platformpostgres "github.com/krishnaditya65/auth-server/internal/platform/postgres"
-	sessionpostgres "github.com/krishnaditya65/auth-server/internal/session/infra/postgres"
+	auditapp "github.com/krishnaditya65/Project-Janus/internal/audit/app"
+	auditpostgres "github.com/krishnaditya65/Project-Janus/internal/audit/infra/postgres"
+	"github.com/krishnaditya65/Project-Janus/internal/platform/config"
+	"github.com/krishnaditya65/Project-Janus/internal/platform/nats"
+	platformpostgres "github.com/krishnaditya65/Project-Janus/internal/platform/postgres"
+	sessionpostgres "github.com/krishnaditya65/Project-Janus/internal/session/infra/postgres"
 )
 
 const (

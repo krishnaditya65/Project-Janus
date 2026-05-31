@@ -6,12 +6,12 @@ import (
 	"strings"
 	"time"
 
-	authdomain "github.com/krishnaditya65/auth-server/internal/authorization/domain"
-	identitydomain "github.com/krishnaditya65/auth-server/internal/identity/domain"
-	sessiondomain "github.com/krishnaditya65/auth-server/internal/session/domain"
-	authctx "github.com/krishnaditya65/auth-server/internal/shared/context"
-	"github.com/krishnaditya65/auth-server/internal/shared/principal"
-	tokenapp "github.com/krishnaditya65/auth-server/internal/token/app"
+	authdomain "github.com/krishnaditya65/Project-Janus/internal/authorization/domain"
+	identitydomain "github.com/krishnaditya65/Project-Janus/internal/identity/domain"
+	sessiondomain "github.com/krishnaditya65/Project-Janus/internal/session/domain"
+	authctx "github.com/krishnaditya65/Project-Janus/internal/shared/context"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/principal"
+	tokenapp "github.com/krishnaditya65/Project-Janus/internal/token/app"
 )
 
 type AuthenticationMiddleware struct {

@@ -6,7 +6,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	authctx "github.com/krishnaditya65/auth-server/internal/shared/context"
+	authctx "github.com/krishnaditya65/Project-Janus/internal/shared/context"
 )
 
 func (h *Handler) ListRolePermissions(

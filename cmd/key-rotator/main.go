@@ -6,10 +6,10 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/krishnaditya65/auth-server/internal/platform/config"
-	platformpostgres "github.com/krishnaditya65/auth-server/internal/platform/postgres"
-	tokenapp "github.com/krishnaditya65/auth-server/internal/token/app"
-	tokenpostgres "github.com/krishnaditya65/auth-server/internal/token/infra/postgres"
+	"github.com/krishnaditya65/Project-Janus/internal/platform/config"
+	platformpostgres "github.com/krishnaditya65/Project-Janus/internal/platform/postgres"
+	tokenapp "github.com/krishnaditya65/Project-Janus/internal/token/app"
+	tokenpostgres "github.com/krishnaditya65/Project-Janus/internal/token/infra/postgres"
 )
 
 func main() {

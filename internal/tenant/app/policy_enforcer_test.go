@@ -3,7 +3,7 @@ package app
 import (
 	"testing"
 
-	"github.com/krishnaditya65/auth-server/internal/tenant/domain"
+	"github.com/krishnaditya65/Project-Janus/internal/tenant/domain"
 )
 
 func TestValidatePassword_MinLength(t *testing.T) {
@@ -26,11 +26,11 @@ func TestValidatePassword_ComplexityRules(t *testing.T) {
 		PasswordRequireSymbol: true,
 	}
 	cases := map[string]error{
-		"abcdef":     ErrPasswordNeedsUpper,
-		"Abcdef":     ErrPasswordNeedsDigit,
-		"Abcdef1":    ErrPasswordNeedsSymbol,
-		"Abcdef1!":   nil,
-		"Aa1!!!":     nil,
+		"abcdef":   ErrPasswordNeedsUpper,
+		"Abcdef":   ErrPasswordNeedsDigit,
+		"Abcdef1":  ErrPasswordNeedsSymbol,
+		"Abcdef1!": nil,
+		"Aa1!!!":   nil,
 	}
 	for pw, want := range cases {
 		if got := e.ValidatePassword(p, pw); got != want {
@@ -51,12 +51,12 @@ func TestValidateEmailDomain_AllowedAndDenied(t *testing.T) {
 	e := NewPolicyEnforcer(nil)
 	p := &domain.Policy{AllowedEmailDomains: []string{"company.com", "Subsidiary.io"}}
 	cases := map[string]bool{
-		"alice@company.com":      true,
-		"bob@subsidiary.io":      true, // case-insensitive
-		"BOB@SUBSIDIARY.IO":      true,
-		"eve@other.com":          false,
-		"no-at-sign":             false,
-		"trailing@":              false,
+		"alice@company.com": true,
+		"bob@subsidiary.io": true, // case-insensitive
+		"BOB@SUBSIDIARY.IO": true,
+		"eve@other.com":     false,
+		"no-at-sign":        false,
+		"trailing@":         false,
 	}
 	for email, want := range cases {
 		got := e.ValidateEmailDomain(p, email) == nil

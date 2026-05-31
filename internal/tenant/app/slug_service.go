@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	tenantdomain "github.com/krishnaditya65/auth-server/internal/tenant/domain"
+	tenantdomain "github.com/krishnaditya65/Project-Janus/internal/tenant/domain"
 )
 
 const maxSlugAttempts = 5

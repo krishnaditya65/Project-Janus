@@ -5,7 +5,7 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"github.com/krishnaditya65/auth-server/internal/audit/domain"
+	"github.com/krishnaditya65/Project-Janus/internal/audit/domain"
 )
 
 type Repository struct {

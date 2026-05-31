@@ -6,8 +6,8 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	authorizationapp "github.com/krishnaditya65/auth-server/internal/authorization/app"
-	authctx "github.com/krishnaditya65/auth-server/internal/shared/context"
+	authorizationapp "github.com/krishnaditya65/Project-Janus/internal/authorization/app"
+	authctx "github.com/krishnaditya65/Project-Janus/internal/shared/context"
 )
 
 func (h *Handler) AssignPermission(

@@ -3,7 +3,7 @@ package app
 import (
 	wa "github.com/go-webauthn/webauthn/webauthn"
 
-	"github.com/krishnaditya65/auth-server/internal/webauthn/domain"
+	"github.com/krishnaditya65/Project-Janus/internal/webauthn/domain"
 )
 
 type WAUser struct {

@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/krishnaditya65/auth-server/internal/oauth/domain"
-	"github.com/krishnaditya65/auth-server/internal/shared/principal"
-	sharedtoken "github.com/krishnaditya65/auth-server/internal/shared/token"
+	"github.com/krishnaditya65/Project-Janus/internal/oauth/domain"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/principal"
+	sharedtoken "github.com/krishnaditya65/Project-Janus/internal/shared/token"
 )
 
 var (

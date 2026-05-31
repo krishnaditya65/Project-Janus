@@ -8,14 +8,14 @@ import (
 	"strings"
 	"time"
 
-	authorizationdomain "github.com/krishnaditya65/auth-server/internal/authorization/domain"
-	identitydomain "github.com/krishnaditya65/auth-server/internal/identity/domain"
-	"github.com/krishnaditya65/auth-server/internal/oauth/domain"
-	sessiondomain "github.com/krishnaditya65/auth-server/internal/session/domain"
-	"github.com/krishnaditya65/auth-server/internal/shared/id"
-	"github.com/krishnaditya65/auth-server/internal/shared/principal"
-	sharedtoken "github.com/krishnaditya65/auth-server/internal/shared/token"
-	tokenapp "github.com/krishnaditya65/auth-server/internal/token/app"
+	authorizationdomain "github.com/krishnaditya65/Project-Janus/internal/authorization/domain"
+	identitydomain "github.com/krishnaditya65/Project-Janus/internal/identity/domain"
+	"github.com/krishnaditya65/Project-Janus/internal/oauth/domain"
+	sessiondomain "github.com/krishnaditya65/Project-Janus/internal/session/domain"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/id"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/principal"
+	sharedtoken "github.com/krishnaditya65/Project-Janus/internal/shared/token"
+	tokenapp "github.com/krishnaditya65/Project-Janus/internal/token/app"
 )
 
 const accessTokenTTL = 15 * time.Minute

@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	authdomain "github.com/krishnaditya65/auth-server/internal/authorization/domain"
-	"github.com/krishnaditya65/auth-server/internal/shared/id"
+	authdomain "github.com/krishnaditya65/Project-Janus/internal/authorization/domain"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/id"
 )
 
 type BootstrapService struct {

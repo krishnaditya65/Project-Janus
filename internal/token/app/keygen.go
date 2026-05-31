@@ -12,7 +12,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/krishnaditya65/auth-server/internal/token/domain"
+	"github.com/krishnaditya65/Project-Janus/internal/token/domain"
 )
 
 func GenerateKey(algorithm string) (*domain.SigningKey, error) {

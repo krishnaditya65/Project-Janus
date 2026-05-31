@@ -3,7 +3,8 @@
 // the spike.
 //
 // Usage:
-//   go run ./test/spike -baseline 10 -burst 100 -burst-duration 5s
+//
+//	go run ./test/spike -baseline 10 -burst 100 -burst-duration 5s
 package main
 
 import (
@@ -191,7 +192,7 @@ func pctOf(d []time.Duration, p float64) time.Duration {
 // ---- shared ----
 
 var httpClient = &http.Client{
-	Timeout: 30 * time.Second,
+	Timeout:   30 * time.Second,
 	Transport: &http.Transport{MaxIdleConns: 500, MaxIdleConnsPerHost: 500},
 }
 

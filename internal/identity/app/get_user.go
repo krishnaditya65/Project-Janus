@@ -3,7 +3,7 @@ package app
 import (
 	"context"
 
-	identitydomain "github.com/krishnaditya65/auth-server/internal/identity/domain"
+	identitydomain "github.com/krishnaditya65/Project-Janus/internal/identity/domain"
 )
 
 type GetUserInput struct {

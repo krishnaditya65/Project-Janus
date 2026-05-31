@@ -6,8 +6,8 @@ import (
 	"net/netip"
 	"strings"
 
-	authapp "github.com/krishnaditya65/auth-server/internal/auth/app"
-	sharederrors "github.com/krishnaditya65/auth-server/internal/shared/errors"
+	authapp "github.com/krishnaditya65/Project-Janus/internal/auth/app"
+	sharederrors "github.com/krishnaditya65/Project-Janus/internal/shared/errors"
 )
 
 type LoginRequest struct {

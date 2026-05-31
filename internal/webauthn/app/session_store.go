@@ -8,7 +8,7 @@ import (
 	wa "github.com/go-webauthn/webauthn/webauthn"
 	goredis "github.com/redis/go-redis/v9"
 
-	sharederrors "github.com/krishnaditya65/auth-server/internal/shared/errors"
+	sharederrors "github.com/krishnaditya65/Project-Janus/internal/shared/errors"
 )
 
 const sessionTTL = 5 * time.Minute

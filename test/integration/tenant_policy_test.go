@@ -31,7 +31,8 @@ func TestTenantPolicy_PutUpdates(t *testing.T) {
 		"require_mfa":             true,
 	})
 	// chi PUT helper not in our Client; use raw do
-	_ = resp; _ = body
+	_ = resp
+	_ = body
 	resp2, body2 := c.do("PUT", "/tenant/policy", map[string]any{
 		"password_min_length":     12,
 		"password_require_digit":  true,

@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/krishnaditya65/auth-server/internal/identity/domain"
-	"github.com/krishnaditya65/auth-server/internal/shared/id"
+	"github.com/krishnaditya65/Project-Janus/internal/identity/domain"
+	"github.com/krishnaditya65/Project-Janus/internal/shared/id"
 )
 
 type CreateIdentityInput struct {

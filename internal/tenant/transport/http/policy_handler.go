@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	authctx "github.com/krishnaditya65/auth-server/internal/shared/context"
-	tenantapp "github.com/krishnaditya65/auth-server/internal/tenant/app"
-	tenantdomain "github.com/krishnaditya65/auth-server/internal/tenant/domain"
+	authctx "github.com/krishnaditya65/Project-Janus/internal/shared/context"
+	tenantapp "github.com/krishnaditya65/Project-Janus/internal/tenant/app"
+	tenantdomain "github.com/krishnaditya65/Project-Janus/internal/tenant/domain"
 )
 
 type PolicyHandler struct {
