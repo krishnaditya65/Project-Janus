@@ -43,18 +43,18 @@ func (h *Handler) JWKS(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := jwksResponse{Keys: make([]jwk, 0, len(keys))}
+	response := jwksResponse{Keys: make([]jwk, 0, len(keys))}
 	for _, k := range keys {
 		j, err := toJWK(k)
 		if err != nil {
 			continue
 		}
-		resp.Keys = append(resp.Keys, j)
+		response.Keys = append(response.Keys, j)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Cache-Control", "public, max-age=3600")
-	json.NewEncoder(w).Encode(resp)
+	json.NewEncoder(w).Encode(response)
 }
 
 func toJWK(k *domain.SigningKey) (jwk, error) {

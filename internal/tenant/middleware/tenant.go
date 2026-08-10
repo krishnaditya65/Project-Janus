@@ -17,13 +17,13 @@ func ResolveTenant(
 			r *http.Request,
 		) {
 
-			p := authctx.MustPrincipal(
+			principal := authctx.MustPrincipal(
 				r.Context(),
 			)
 
 			ctx := tenancy.WithTenant(
 				r.Context(),
-				p.TenantID,
+				principal.TenantID,
 			)
 
 			next.ServeHTTP(

@@ -173,7 +173,7 @@ func (u *LoginUseCase) Execute(ctx context.Context, input LoginInput) (*LoginOut
 		return nil, err
 	}
 
-	p := &principal.Principal{
+	authPrincipal := &principal.Principal{
 		SessionID:   session.ID,
 		IdentityID:  identity.ID,
 		TenantID:    user.TenantID,
@@ -183,7 +183,7 @@ func (u *LoginUseCase) Execute(ctx context.Context, input LoginInput) (*LoginOut
 		Permissions: permissions,
 	}
 
-	accessToken, err := u.jwtService.Issue(ctx, p, tokenapp.IssueOptions{TTL: accessTokenTTL})
+	accessToken, err := u.jwtService.Issue(ctx, authPrincipal, tokenapp.IssueOptions{TTL: accessTokenTTL})
 	if err != nil {
 		return nil, err
 	}

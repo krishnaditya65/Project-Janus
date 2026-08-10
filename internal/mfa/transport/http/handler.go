@@ -108,11 +108,11 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 		Label      string `json:"label"`
 		Verified   bool   `json:"verified"`
 	}
-	resp := make([]out, 0, len(factors))
+	response := make([]out, 0, len(factors))
 	for _, f := range factors {
-		resp = append(resp, out{f.ID, f.FactorType, f.Label, f.Verified})
+		response = append(response, out{f.ID, f.FactorType, f.Label, f.Verified})
 	}
-	writeJSON(w, http.StatusOK, resp)
+	writeJSON(w, http.StatusOK, response)
 }
 
 func writeJSON(w http.ResponseWriter, status int, v any) {

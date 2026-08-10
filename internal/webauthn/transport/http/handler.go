@@ -119,14 +119,14 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 		CreatedAt  string   `json:"created_at"`
 		LastUsedAt *string  `json:"last_used_at"`
 	}
-	resp := make([]out, 0, len(creds))
+	response := make([]out, 0, len(creds))
 	for _, c := range creds {
 		o := out{ID: c.ID, Label: c.Label, Transports: c.Transports, CreatedAt: c.CreatedAt.Format("2006-01-02T15:04:05Z")}
 		if c.LastUsedAt != nil {
 			s := c.LastUsedAt.Format("2006-01-02T15:04:05Z")
 			o.LastUsedAt = &s
 		}
-		resp = append(resp, o)
+		response = append(response, o)
 	}
-	writeJSON(w, http.StatusOK, resp)
+	writeJSON(w, http.StatusOK, response)
 }

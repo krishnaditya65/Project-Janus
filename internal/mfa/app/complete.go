@@ -110,7 +110,7 @@ func (u *CompleteUseCase) Execute(ctx context.Context, in CompleteInput) (*Compl
 		return nil, err
 	}
 
-	p := &principal.Principal{
+	authPrincipal := &principal.Principal{
 		SessionID:   session.ID,
 		IdentityID:  challenge.IdentityID,
 		TenantID:    challenge.TenantID,
@@ -120,7 +120,7 @@ func (u *CompleteUseCase) Execute(ctx context.Context, in CompleteInput) (*Compl
 		Permissions: permissions,
 	}
 
-	accessToken, err := u.jwtService.Issue(ctx, p, tokenapp.IssueOptions{TTL: accessTokenTTL})
+	accessToken, err := u.jwtService.Issue(ctx, authPrincipal, tokenapp.IssueOptions{TTL: accessTokenTTL})
 	if err != nil {
 		return nil, err
 	}

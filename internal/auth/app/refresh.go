@@ -120,7 +120,7 @@ func (u *RefreshUseCase) Execute(ctx context.Context, input RefreshInput) (*Refr
 		return nil, err
 	}
 
-	p := &principal.Principal{
+	authPrincipal := &principal.Principal{
 		SessionID:   newSession.ID,
 		IdentityID:  session.IdentityID,
 		TenantID:    session.TenantID,
@@ -130,7 +130,7 @@ func (u *RefreshUseCase) Execute(ctx context.Context, input RefreshInput) (*Refr
 		Permissions: permissions,
 	}
 
-	accessToken, err := u.jwtService.Issue(ctx, p, tokenapp.IssueOptions{TTL: accessTokenTTL})
+	accessToken, err := u.jwtService.Issue(ctx, authPrincipal, tokenapp.IssueOptions{TTL: accessTokenTTL})
 	if err != nil {
 		return nil, err
 	}

@@ -156,7 +156,7 @@ func (u *TokenUseCase) authorizationCodeGrant(ctx context.Context, in TokenInput
 		return nil, err
 	}
 
-	p := &principal.Principal{
+	authPrincipal := &principal.Principal{
 		SessionID:   session.ID,
 		IdentityID:  code.IdentityID,
 		TenantID:    code.TenantID,
@@ -166,7 +166,7 @@ func (u *TokenUseCase) authorizationCodeGrant(ctx context.Context, in TokenInput
 		Permissions: permissions,
 	}
 
-	accessToken, err := u.jwtService.Issue(ctx, p, tokenapp.IssueOptions{
+	accessToken, err := u.jwtService.Issue(ctx, authPrincipal, tokenapp.IssueOptions{
 		TTL:      accessTokenTTL,
 		Audience: []string{in.ClientID},
 	})
@@ -183,7 +183,7 @@ func (u *TokenUseCase) authorizationCodeGrant(ctx context.Context, in TokenInput
 	}
 
 	if hasScope(code.Scopes, "openid") && u.idTokenIssuer != nil {
-		idToken, err := u.idTokenIssuer.IssueIDToken(ctx, p, in.ClientID, code.Nonce, accessTokenTTL)
+		idToken, err := u.idTokenIssuer.IssueIDToken(ctx, authPrincipal, in.ClientID, code.Nonce, accessTokenTTL)
 		if err != nil {
 			return nil, err
 		}
@@ -242,7 +242,7 @@ func (u *TokenUseCase) refreshTokenGrant(ctx context.Context, in TokenInput) (*T
 		return nil, err
 	}
 
-	p := &principal.Principal{
+	authPrincipal := &principal.Principal{
 		SessionID:   newSession.ID,
 		IdentityID:  session.IdentityID,
 		TenantID:    session.TenantID,
@@ -252,7 +252,7 @@ func (u *TokenUseCase) refreshTokenGrant(ctx context.Context, in TokenInput) (*T
 		Permissions: permissions,
 	}
 
-	accessToken, err := u.jwtService.Issue(ctx, p, tokenapp.IssueOptions{
+	accessToken, err := u.jwtService.Issue(ctx, authPrincipal, tokenapp.IssueOptions{
 		TTL:      accessTokenTTL,
 		Audience: []string{in.ClientID},
 	})

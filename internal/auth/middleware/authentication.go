@@ -130,7 +130,7 @@ func (m *AuthenticationMiddleware) fromSessionHeader(r *http.Request) *principal
 		return nil
 	}
 
-	p := &principal.Principal{
+	authPrincipal := &principal.Principal{
 		SessionID:   session.ID,
 		IdentityID:  session.IdentityID,
 		TenantID:    session.TenantID,
@@ -139,6 +139,6 @@ func (m *AuthenticationMiddleware) fromSessionHeader(r *http.Request) *principal
 		Roles:       roles,
 		Permissions: permissions,
 	}
-	m.cache.Put(r.Context(), p)
-	return p
+	m.cache.Put(r.Context(), authPrincipal)
+	return authPrincipal
 }

@@ -39,13 +39,13 @@ func (c *PrincipalCache) Get(ctx context.Context, sessionID string) (*principal.
 		metrics.PrincipalCacheMisses.Inc()
 		return nil, false
 	}
-	p := &principal.Principal{}
-	if err := json.Unmarshal(b, p); err != nil {
+	cached := &principal.Principal{}
+	if err := json.Unmarshal(b, cached); err != nil {
 		metrics.PrincipalCacheMisses.Inc()
 		return nil, false
 	}
 	metrics.PrincipalCacheHits.Inc()
-	return p, true
+	return cached, true
 }
 
 func (c *PrincipalCache) Put(ctx context.Context, p *principal.Principal) {

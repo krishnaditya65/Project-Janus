@@ -37,9 +37,9 @@ func (s *SessionStore) Consume(ctx context.Context, key string) (*wa.SessionData
 	if err != nil {
 		return nil, err
 	}
-	d := &wa.SessionData{}
-	if err := json.Unmarshal(b, d); err != nil {
+	sessionData := &wa.SessionData{}
+	if err := json.Unmarshal(b, sessionData); err != nil {
 		return nil, err
 	}
-	return d, nil
+	return sessionData, nil
 }

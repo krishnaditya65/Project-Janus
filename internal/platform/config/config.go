@@ -41,10 +41,10 @@ func Load() Config {
 }
 
 func getEnv(key string, fallback string) string {
-	val := os.Getenv(key)
-	if val == "" {
+	value := os.Getenv(key)
+	if value == "" {
 		return fallback
 	}
 
-	return val
+	return value
 }

@@ -101,7 +101,7 @@ func (u *LoginUseCase) Complete(ctx context.Context, sessionKey string, r *http.
 		return nil, err
 	}
 
-	p := &principal.Principal{
+	authPrincipal := &principal.Principal{
 		SessionID:   session.ID,
 		IdentityID:  cred.IdentityID,
 		TenantID:    user.TenantID,
@@ -111,7 +111,7 @@ func (u *LoginUseCase) Complete(ctx context.Context, sessionKey string, r *http.
 		Permissions: permissions,
 	}
 
-	accessToken, err := u.jwtService.Issue(ctx, p, tokenapp.IssueOptions{TTL: accessTokenTTL})
+	accessToken, err := u.jwtService.Issue(ctx, authPrincipal, tokenapp.IssueOptions{TTL: accessTokenTTL})
 	if err != nil {
 		return nil, err
 	}

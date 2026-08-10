@@ -36,22 +36,22 @@ func (r *PolicyRepository) Get(ctx context.Context, tenantID string) (*domain.Po
 		FROM tenant_policies WHERE tenant_id = $1`
 
 	row := r.executor(ctx).QueryRow(ctx, q, tenantID)
-	p := &domain.Policy{TenantID: tenantID}
+	policy := &domain.Policy{TenantID: tenantID}
 	var domains []byte
-	err := row.Scan(&p.PasswordMinLength, &p.PasswordRequireUpper, &p.PasswordRequireDigit,
-		&p.PasswordRequireSymbol, &domains, &p.RequireMFA, &p.MaxActiveSessions)
+	err := row.Scan(&policy.PasswordMinLength, &policy.PasswordRequireUpper, &policy.PasswordRequireDigit,
+		&policy.PasswordRequireSymbol, &domains, &policy.RequireMFA, &policy.MaxActiveSessions)
 	if errors.Is(err, pgx.ErrNoRows) {
-		d := domain.DefaultPolicy()
-		d.TenantID = tenantID
-		return d, nil
+		defaultPolicy := domain.DefaultPolicy()
+		defaultPolicy.TenantID = tenantID
+		return defaultPolicy, nil
 	}
 	if err != nil {
 		return nil, err
 	}
 	if len(domains) > 0 {
-		_ = json.Unmarshal(domains, &p.AllowedEmailDomains)
+		_ = json.Unmarshal(domains, &policy.AllowedEmailDomains)
 	}
-	return p, nil
+	return policy, nil
 }
 
 func (r *PolicyRepository) Upsert(ctx context.Context, p *domain.Policy) error {
