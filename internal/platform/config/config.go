@@ -18,6 +18,20 @@ type Config struct {
 	WebAuthnRPID    string
 	WebAuthnName    string
 	WebAuthnOrigin  string
+
+	// IdentityHTTPPort is the port identity-service listens on.
+	IdentityHTTPPort string
+	// IdentityServiceURL is where other services (iam-server) reach
+	// identity-service's internal HTTP API.
+	IdentityServiceURL string
+
+	// MFAHTTPPort is the port mfa-service listens on.
+	MFAHTTPPort string
+	// MFAServiceURL is where other services (iam-server) reach
+	// mfa-service's HTTP API (both the principal-authenticated
+	// enroll/verify/list/complete/webauthn routes and the internal-only
+	// factor/challenge routes backing mfa/infra/httpclient).
+	MFAServiceURL string
 }
 
 func Load() Config {
@@ -37,6 +51,12 @@ func Load() Config {
 		WebAuthnRPID:    getEnv("WEBAUTHN_RPID", "localhost"),
 		WebAuthnName:    getEnv("WEBAUTHN_NAME", "Auth Server"),
 		WebAuthnOrigin:  getEnv("WEBAUTHN_ORIGIN", "http://localhost:3000"),
+
+		IdentityHTTPPort:   getEnv("IDENTITY_HTTP_PORT", "8081"),
+		IdentityServiceURL: getEnv("IDENTITY_SERVICE_URL", "http://localhost:8081"),
+
+		MFAHTTPPort:   getEnv("MFA_HTTP_PORT", "8082"),
+		MFAServiceURL: getEnv("MFA_SERVICE_URL", "http://localhost:8082"),
 	}
 }
 

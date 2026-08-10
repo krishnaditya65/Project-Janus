@@ -2,6 +2,8 @@ package app
 
 import (
 	"context"
+	"fmt"
+	"log/slog"
 	"time"
 
 	authdomain "github.com/krishnaditya65/Project-Janus/internal/auth/domain"
@@ -61,24 +63,29 @@ func (u *CreateUserUseCase) Execute(
 
 	var created *identitydomain.User
 
+	now := time.Now().UTC()
+
+	identity := &identitydomain.Identity{
+		ID:            id.New(),
+		PrimaryEmail:  input.Email,
+		EmailVerified: false,
+		Status:        "active",
+		CreatedAt:     now,
+		UpdatedAt:     now,
+	}
+
+	// identityRepo.Create is a network call to identity-service, not part
+	// of the local Postgres transaction below - it happens first, outside
+	// txManager.WithinTransaction, so a failure here needs no compensation
+	// of its own and the transaction below only ever runs against an
+	// identity that already exists.
+	if err := u.identityRepo.Create(ctx, identity); err != nil {
+		return nil, err
+	}
+
 	err := u.txManager.WithinTransaction(
 		ctx,
 		func(txCtx context.Context) error {
-
-			now := time.Now().UTC()
-
-			identity := &identitydomain.Identity{
-				ID:            id.New(),
-				PrimaryEmail:  input.Email,
-				EmailVerified: false,
-				Status:        "active",
-				CreatedAt:     now,
-				UpdatedAt:     now,
-			}
-
-			if err := u.identityRepo.Create(txCtx, identity); err != nil {
-				return err
-			}
 
 			hash, err := password.Hash(input.Password)
 			if err != nil {
@@ -132,6 +139,24 @@ func (u *CreateUserUseCase) Execute(
 	)
 
 	if err != nil {
+		// The identity was already persisted (outside this local
+		// transaction, which has since rolled back), so it must be
+		// explicitly compensated for or it is orphaned: a row in
+		// identity-service with no matching credential/user in this
+		// service's database.
+		if delErr := u.identityRepo.Delete(ctx, identity.ID); delErr != nil {
+			slog.Error(
+				"create_user: failed to compensate for orphaned identity after transaction failure",
+				"identity_id", identity.ID,
+				"tx_error", err,
+				"delete_error", delErr,
+			)
+			return nil, fmt.Errorf(
+				"create_user: transaction failed (%w) and compensating identity delete also failed for identity %s: %w",
+				err, identity.ID, delErr,
+			)
+		}
+
 		return nil, err
 	}
 

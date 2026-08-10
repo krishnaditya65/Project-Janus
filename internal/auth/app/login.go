@@ -24,6 +24,15 @@ import (
 // but the identity has no verified factors.
 var ErrMFAEnrollmentRequired = errors.New("mfa enrollment required")
 
+// MFAChallengeStore is the minimal surface LoginUseCase needs from mfa's
+// challenge store. It used to be handed a concrete *mfaapp.ChallengeStore
+// (Redis-backed, constructed in-process); now that mfa is its own service,
+// this is satisfied by mfa/infra/httpclient.ChallengeStoreClient instead -
+// accept an interface, keep the struct on mfa's side, per usual Go idiom.
+type MFAChallengeStore interface {
+	Store(ctx context.Context, c *mfaapp.Challenge) error
+}
+
 const accessTokenTTL = 15 * time.Minute
 const refreshTokenTTL = 7 * 24 * time.Hour
 
@@ -56,7 +65,7 @@ type LoginUseCase struct {
 	sessionRepo        sessiondomain.Repository
 	jwtService         *tokenapp.JWTService
 	mfaRepo            mfadomain.Repository
-	mfaChallengeStore  *mfaapp.ChallengeStore
+	mfaChallengeStore  MFAChallengeStore
 	policyEnforcer     *tenantapp.PolicyEnforcer
 }
 
@@ -69,7 +78,7 @@ func NewLoginUseCase(
 	sessionRepo sessiondomain.Repository,
 	jwtService *tokenapp.JWTService,
 	mfaRepo mfadomain.Repository,
-	mfaChallengeStore *mfaapp.ChallengeStore,
+	mfaChallengeStore MFAChallengeStore,
 	policyEnforcer *tenantapp.PolicyEnforcer,
 ) *LoginUseCase {
 	return &LoginUseCase{

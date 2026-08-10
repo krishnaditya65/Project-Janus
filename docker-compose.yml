@@ -48,6 +48,82 @@ services:
     networks:
       - auth-server-network
 
+  # identity-service owns the identities table (Postgres stays shared with
+  # iam-server - this is a network-API boundary, not a data-ownership
+  # split). iam-server reaches it via IDENTITY_SERVICE_URL.
+  identity-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE: identity-service
+    container_name: auth-server-identity-service
+    restart: unless-stopped
+    environment:
+      APP_ENV: development
+      IDENTITY_HTTP_PORT: "8081"
+      DATABASE_URL: postgres://authadmin:authpassword@postgres:5432/authserver?sslmode=disable
+    ports:
+      - "8081:8081"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - auth-server-network
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8081/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # mfa-service owns MFA factors, MFA challenges, and webauthn credentials
+  # (Postgres and Redis both stay shared with iam-server - same
+  # network-API-boundary-only rule as identity-service above). iam-server
+  # reaches it via MFA_SERVICE_URL; end users reach its principal-
+  # authenticated routes (enroll/verify/list/complete, webauthn
+  # register/login/list) directly.
+  mfa-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE: mfa-service
+    container_name: auth-server-mfa-service
+    restart: unless-stopped
+    environment:
+      APP_ENV: development
+      MFA_HTTP_PORT: "8082"
+      DATABASE_URL: postgres://authadmin:authpassword@postgres:5432/authserver?sslmode=disable
+      REDIS_ADDR: redis:6379
+      IDENTITY_SERVICE_URL: http://identity-service:8081
+      JWT_ISSUER: http://localhost:8080
+      WEBAUTHN_RPID: localhost
+      WEBAUTHN_NAME: Auth Server
+      WEBAUTHN_ORIGIN: http://localhost:3000
+    ports:
+      - "8082:8082"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      identity-service:
+        condition: service_healthy
+    networks:
+      - auth-server-network
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8082/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # iam-server is not yet containerized in this compose file (no service
+  # block existed before this change either); it is included here only as
+  # the env vars iam-server needs to reach identity-service and mfa-service
+  # when it is run.
+  # IDENTITY_SERVICE_URL=http://identity-service:8081
+  # MFA_SERVICE_URL=http://mfa-service:8082
+
 volumes:
   auth_server_postgres_data:
   auth_server_redis_data:

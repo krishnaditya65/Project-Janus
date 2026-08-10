@@ -14,7 +14,7 @@ import (
 	authorizationmiddleware "github.com/krishnaditya65/Project-Janus/internal/authorization/middleware"
 	authorizationhttp "github.com/krishnaditya65/Project-Janus/internal/authorization/transport/http"
 
-	identitypostgres "github.com/krishnaditya65/Project-Janus/internal/identity/infra/postgres"
+	identityhttpclient "github.com/krishnaditya65/Project-Janus/internal/identity/infra/httpclient"
 	tenantapp "github.com/krishnaditya65/Project-Janus/internal/tenant/app"
 	tenantpostgres "github.com/krishnaditya65/Project-Janus/internal/tenant/infra/postgres"
 
@@ -42,13 +42,7 @@ import (
 	oidcapp "github.com/krishnaditya65/Project-Janus/internal/oidc/app"
 	oidchttp "github.com/krishnaditya65/Project-Janus/internal/oidc/transport/http"
 
-	mfaapp "github.com/krishnaditya65/Project-Janus/internal/mfa/app"
-	mfapostgres "github.com/krishnaditya65/Project-Janus/internal/mfa/infra/postgres"
-	mfahttp "github.com/krishnaditya65/Project-Janus/internal/mfa/transport/http"
-
-	waapp "github.com/krishnaditya65/Project-Janus/internal/webauthn/app"
-	wapostgres "github.com/krishnaditya65/Project-Janus/internal/webauthn/infra/postgres"
-	wahttp "github.com/krishnaditya65/Project-Janus/internal/webauthn/transport/http"
+	mfahttpclient "github.com/krishnaditya65/Project-Janus/internal/mfa/infra/httpclient"
 
 	auditapp "github.com/krishnaditya65/Project-Janus/internal/audit/app"
 	"github.com/krishnaditya65/Project-Janus/internal/platform/metrics"
@@ -91,7 +85,11 @@ func main() {
 	txManager := pgtx.NewManager(db)
 
 	// repositories
-	identityRepo := identitypostgres.NewRepository(db)
+	// identityRepo now talks to identity-service over HTTP instead of
+	// Postgres directly - see internal/identity/infra/httpclient. This is
+	// the only line that changed for this binary's identity dependency;
+	// everything downstream still just depends on identitydomain.Repository.
+	identityRepo := identityhttpclient.NewRepository(cfg.IdentityServiceURL)
 	credentialRepo := authpostgres.NewRepository(db)
 	tenantRepo := tenantpostgres.NewRepository(db)
 	userRepo := postgresuser.NewRepository(db)
@@ -103,13 +101,17 @@ func main() {
 	signingKeyRepo := tokenpostgres.NewRepository(db)
 	oauthClientRepo := oauthpostgres.NewClientRepository(db)
 	oauthCodeStore := oauthredis.NewCodeStore(cache)
-	mfaRepo := mfapostgres.NewRepository(db)
-	mfaChallengeStore := mfaapp.NewChallengeStore(cache)
+	// mfaRepo and mfaChallengeStore now talk to mfa-service over HTTP
+	// instead of Postgres/Redis directly - see internal/mfa/infra/httpclient.
+	// This mirrors the identityRepo swap above: everything downstream still
+	// just depends on mfadomain.Repository / auth's minimal
+	// MFAChallengeStore interface.
+	mfaRepo := mfahttpclient.NewRepository(cfg.MFAServiceURL)
+	mfaChallengeStore := mfahttpclient.NewChallengeStoreClient(cfg.MFAServiceURL)
 	tenantPolicyRepo := tenantpostgres.NewPolicyRepository(db)
 
 	// services
 	jwtService := tokenapp.NewJWTService(signingKeyRepo, cfg.JWTIssuer)
-	totpService := mfaapp.NewTOTPService(mfaRepo, cfg.JWTIssuer)
 	policyEnforcer := tenantapp.NewPolicyEnforcer(tenantPolicyRepo)
 	principalCache := authmiddleware.NewPrincipalCache(cache)
 	auditPublisher := auditapp.NewPublisher(msgBus)
@@ -145,16 +147,6 @@ func main() {
 		mfaRepo,
 		mfaChallengeStore,
 		policyEnforcer,
-	)
-
-	mfaCompleteUseCase := mfaapp.NewCompleteUseCase(
-		mfaChallengeStore,
-		totpService,
-		sessionRepo,
-		identityRepo,
-		userRoleRepo,
-		rolePermissionRepo,
-		jwtService,
 	)
 
 	refreshUseCase := authapp.NewRefreshUseCase(
@@ -243,22 +235,11 @@ func main() {
 	)
 	oauthHandler := oauthhttp.NewHandler(authorizeUseCase, oauthTokenUseCase)
 
-	mfaHandler := mfahttp.NewHandler(totpService, mfaCompleteUseCase)
-
-	waCredRepo := wapostgres.NewRepository(db)
-	waSessionStore := waapp.NewSessionStore(cache)
-	waService, err := waapp.NewService(
-		cfg.WebAuthnName, cfg.WebAuthnRPID, []string{cfg.WebAuthnOrigin},
-		waCredRepo, identityRepo, waSessionStore,
-	)
-	if err != nil {
-		slog.Error("webauthn init failed", "err", err)
-		os.Exit(1)
-	}
-	waLoginUseCase := waapp.NewLoginUseCase(
-		waService, sessionRepo, identityRepo, userRepo, userRoleRepo, rolePermissionRepo, jwtService,
-	)
-	waHandler := wahttp.NewHandler(waService, waLoginUseCase)
+	// mfa and webauthn (enroll/verify/list/complete, register/login/list)
+	// are served by mfa-service now, not iam-server - see
+	// cmd/mfa-service/main.go. iam-server only needs mfaRepo and
+	// mfaChallengeStore (both httpclient-backed, wired above) for
+	// LoginUseCase.
 
 	server := httpserver.New(cfg.HTTPPort)
 	r := server.Router()
@@ -286,9 +267,6 @@ func main() {
 	r.Get("/.well-known/openid-configuration", oidcHandler.Discovery)
 	r.Mount("/metrics", metrics.Handler())
 	r.Post("/oauth/token", oauthHandler.Token)
-	r.Post("/mfa/complete", mfaHandler.Complete)
-	r.Post("/webauthn/login/begin", waHandler.LoginBegin)
-	r.Post("/webauthn/login/complete", waHandler.LoginComplete)
 
 	// authenticated routes
 	withAuth := func(next http.Handler) http.Handler {
@@ -303,13 +281,9 @@ func main() {
 	r.With(withAuth).Get("/oauth/authorize", oauthHandler.Authorize)
 	r.With(withAuth).Get("/oauth/userinfo", userInfoHandler.UserInfo)
 
-	r.With(withAuth).Post("/mfa/enroll/totp", mfaHandler.EnrollTOTP)
-	r.With(withAuth).Post("/mfa/enroll/verify", mfaHandler.VerifyEnrollment)
-	r.With(withAuth).Get("/mfa/factors", mfaHandler.List)
-
-	r.With(withAuth).Post("/webauthn/register/begin", waHandler.RegisterBegin)
-	r.With(withAuth).Post("/webauthn/register/complete", waHandler.RegisterComplete)
-	r.With(withAuth).Get("/webauthn/credentials", waHandler.List)
+	// mfa/webauthn routes (enroll, verify, list, complete, register,
+	// login) are served directly by mfa-service now - see
+	// cmd/mfa-service/main.go - not proxied through iam-server.
 
 	r.With(withAuth).Get("/tenant/policy", policyHandler.Get)
 	r.With(withAuth, withPerm("tenant:update")).Put("/tenant/policy", policyHandler.Put)

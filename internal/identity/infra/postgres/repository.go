@@ -133,6 +133,20 @@ func (r *Repository) GetByID(
 	return &identity, nil
 }
 
+func (r *Repository) Delete(
+	ctx context.Context,
+	id string,
+) error {
+	query := `DELETE FROM identities WHERE id = $1`
+
+	_, err := r.executor(ctx).Exec(ctx, query, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r *Repository) executor(ctx context.Context) pgtx.Executor {
 	if tx, ok := pgtx.FromContext(ctx); ok {
 		return tx
