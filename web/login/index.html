@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sign in · Janus</title>
+<link rel="stylesheet" href="../shared/style.css">
+<style>
+  .wrap{min-height:100vh;display:grid;grid-template-columns:1.1fr 1fr}
+  .hero{position:relative;overflow:hidden;color:#fff;padding:56px;display:flex;flex-direction:column;justify-content:space-between;
+    background:radial-gradient(900px 500px at 10% 0%,#8b5cf6 0,transparent 60%),radial-gradient(700px 500px at 100% 100%,#2dd4bf55 0,transparent 60%),linear-gradient(135deg,#2b2a8f,#5b5bf0)}
+  .hero .logo i{background:rgba(255,255,255,.18)}
+  .hero h1{font-size:40px;line-height:1.1;max-width:460px;margin-bottom:14px}
+  .hero p{opacity:.85;max-width:440px;font-size:16px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:24px}
+  .chips span{background:rgba(255,255,255,.14);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.2);padding:5px 12px;border-radius:99px;font-size:12.5px}
+  .panel{display:grid;place-items:center;padding:32px}
+  .box{width:100%;max-width:400px}
+  .tabs{display:flex;background:var(--surface-2);padding:4px;border-radius:12px;margin:22px 0}
+  .tabs button{flex:1;border:0;background:none;padding:8px;border-radius:9px;cursor:pointer;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--surface);color:var(--text);box-shadow:var(--shadow)}
+  .btn.primary{width:100%;justify-content:center;padding:11px}
+  .otp{letter-spacing:.5em;text-align:center;font-size:22px!important;font-family:var(--mono)}
+  .foot{margin-top:22px;display:flex;justify-content:space-between;color:var(--muted);font-size:12.5px}
+  .foot button{background:none;border:0;color:var(--muted);cursor:pointer;text-decoration:underline;padding:0}
+  @media(max-width:860px){.wrap{grid-template-columns:1fr}.hero{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <aside class="hero">
+    <div class="logo"><i>◈</i> Janus</div>
+    <div>
+      <h1>One front door for every identity.</h1>
+      <p>Multi-tenant authentication, OAuth&nbsp;2 + PKCE, OIDC, MFA and passkeys — managed from a single console.</p>
+      <div class="chips"><span>OAuth 2 + PKCE</span><span>OIDC</span><span>TOTP MFA</span><span>WebAuthn</span><span>Multi-tenant</span></div>
+    </div>
+    <small style="opacity:.7">Secure by default · short-lived JWTs · rotating refresh tokens</small>
+  </aside>
+
+  <main class="panel"><div class="box">
+    <div class="logo" style="display:none" id="mlogo"><i>◈</i> Janus</div>
+    <h2 id="title" style="font-size:26px">Welcome back</h2>
+    <div class="hint" id="sub">Sign in to continue to your workspace.</div>
+
+    <div class="tabs" id="tabs">
+      <button class="on" data-m="login">Sign in</button><button data-m="register">Create account</button>
+    </div>
+    <div class="alert" id="msg"></div>
+
+    <form id="cred">
+      <div class="field"><label>Email</label><input id="email" type="email" autocomplete="username" required placeholder="you@company.com"></div>
+      <div class="field"><label>Password</label><input id="pw" type="password" autocomplete="current-password" required placeholder="••••••••"></div>
+      <button class="btn primary" id="go"><span class="spin"></span><span id="golabel">Sign in</span></button>
+    </form>
+
+    <form id="mfa" style="display:none">
+      <div class="field"><label>Authenticator code</label><input id="code" class="otp" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000" required></div>
+      <button class="btn primary"><span class="spin"></span>Verify &amp; continue</button>
+      <div class="foot"><button type="button" id="back">← Use a different account</button></div>
+    </form>
+
+    <div class="foot"><span>API: <code id="base"></code></span><button id="chg">change</button></div>
+  </div></main>
+</div>
+<script src="../shared/api.js"></script>
+<script>
+const {api, Auth} = IAM, $ = id => document.getElementById(id);
+let mode = 'login', mfaToken = null;
+$('base').textContent = Auth.base();
+if (Auth.token()) location.replace('../admin/');
+$('chg').onclick = () => { const v = prompt('Auth server base URL', Auth.base()); if (v) { Auth.setBase(v); $('base').textContent = Auth.base(); } };
+const show = (t, kind='err') => { const m = $('msg'); m.textContent = t; m.className = 'alert show ' + kind; };
+const hide = () => $('msg').className = 'alert';
+const busy = (f, on) => { f.classList.toggle('loading', on); f.querySelector('button.primary').disabled = on; };
+
+document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => {
+  mode = b.dataset.m; hide();
+  document.querySelectorAll('#tabs button').forEach(x => x.classList.toggle('on', x === b));
+  $('golabel').textContent = mode === 'login' ? 'Sign in' : 'Create account';
+  $('title').textContent = mode === 'login' ? 'Welcome back' : 'Create your account';
+  $('pw').autocomplete = mode === 'login' ? 'current-password' : 'new-password';
+});
+
+function done(out){ Auth.save(out); location.href = '../admin/'; }
+
+$('cred').onsubmit = async e => {
+  e.preventDefault(); hide(); busy($('cred'), true);
+  try {
+    const body = {email: $('email').value.trim(), password: $('pw').value};
+    if (mode === 'register') {
+      await api('/register', {method:'POST', body, auth:false});
+      show('Account created — signing you in…', 'ok');
+    }
+    const out = await api('/login', {method:'POST', body, auth:false});
+    if (out.mfa_required) {
+      mfaToken = out.mfa_token; $('cred').style.display = $('tabs').style.display = 'none'; $('mfa').style.display = '';
+      $('title').textContent = 'Two-step verification'; $('sub').textContent = 'Enter the 6-digit code from your authenticator app.'; hide(); $('code').focus();
+    } else done(out);
+  } catch(err) { show(err.status === 403 ? 'Your organization requires MFA. Enroll an authenticator first (ask an admin), then sign in.' : err.message); }
+  finally { busy($('cred'), false); }
+};
+$('mfa').onsubmit = async e => {
+  e.preventDefault(); hide(); busy($('mfa'), true);
+  try { done(await api('/mfa/complete', {method:'POST', auth:false, body:{mfa_token:mfaToken, code:$('code').value.trim()}})); }
+  catch(err){ show(err.message); } finally { busy($('mfa'), false); }
+};
+$('back').onclick = () => location.reload();
+</script>
+</body>
+</html>

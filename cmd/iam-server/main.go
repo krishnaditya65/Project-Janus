@@ -279,6 +279,9 @@ func main() {
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("ok"))
 	})
+	// static web UI (login + admin console); run the server from the repo root
+	r.Handle("/ui/*", http.StripPrefix("/ui/", http.FileServer(http.Dir("web"))))
+	r.Get("/ui", func(w http.ResponseWriter, r *http.Request) { http.Redirect(w, r, "/ui/login/", http.StatusFound) })
 	r.Post("/register", authHandler.Register)
 	r.Post("/login", authHandler.Login)
 	r.Post("/refresh", authHandler.Refresh)

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Console · Janus</title>
+<link rel="stylesheet" href="../shared/style.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div class="app">
+  <aside class="side" id="side">
+    <div class="logo"><i>◈</i> Janus <span class="badge accent" style="margin-left:auto">admin</span></div>
+    <nav id="nav"></nav>
+    <div class="me">
+      <div class="avatar" id="av">?</div>
+      <div style="min-width:0"><div id="meEmail" class="trunc">…</div><div class="hint trunc" id="meRoles"></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <header class="top">
+      <button class="btn sm burger" id="burger">☰</button>
+      <h1 id="pageTitle">Overview</h1>
+      <div class="grow"></div>
+      <span class="badge" id="health"><span class="dot"></span>checking…</span>
+      <button class="btn sm" id="theme" title="Toggle theme">◐</button>
+      <button class="btn sm" id="logout">Sign out</button>
+    </header>
+    <main id="view"></main>
+  </div>
+</div>
+<div id="toasts"></div>
+<dialog id="dlg"></dialog>
+<script src="../shared/api.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
